@@ -23,8 +23,8 @@ jobs:
   
       - name: Create new branch
         run: |
-          git checkout -b release-${{ inputs.version }} tags/${{ inputs.version }}
-          git push origin release-${{ inputs.version }}
+          git checkout -b release-asd
+          git push origin release-asd
   
       - name: Verify branch creation
         run: git ls-remote --heads origin release-${{ inputs.version }}
@@ -33,10 +33,10 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: release-${{ inputs.version }}"
-          title: "chore: release-${{ inputs.version }}"
-          body: "chore: release-${{ inputs.version }}"
-          branch: release-${{ inputs.version }}
+          commit-message: "chore: release-asd"
+          title: "chore: release-asd"
+          body: "chore: release-asd"
+          branch: release-asd
           base: main
           reviewers: "abhilashlr7"
           assignees: "abhilashlr7"
