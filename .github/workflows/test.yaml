@@ -27,7 +27,7 @@ jobs:
           git push origin release-asd
   
       - name: Verify branch creation
-        run: git ls-remote --heads origin release-${{ inputs.version }}
+        run: git ls-remote --heads origin release-asd
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v3
