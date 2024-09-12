@@ -16,16 +16,32 @@ jobs:
       - name: Print Hello World
         run: echo "Hello World"
 
-      - uses: trstringer/manual-approval@v1
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
-          secret: ${{ github.TOKEN }}
-          approvers: mukul-atomicwork
-          minimum-approvals: 1
-          issue-title: "Deploying v1.3.5 to prod from staging"
-          issue-body: "Please approve or deny the deployment of version v1.3.5."
-          exclude-workflow-initiator-as-approver: false
-          additional-approved-words: ''
-          additional-denied-words: ''
+          fetch-depth: 0
+  
+      - name: Create new branch
+        run: |
+          git checkout -b release-${{ inputs.version }} tags/${{ inputs.version }}
+          git push origin release-${{ inputs.version }}
+  
+      - name: Verify branch creation
+        run: git ls-remote --heads origin release-${{ inputs.version }}
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: release-${{ inputs.version }}"
+          title: "chore: release-${{ inputs.version }}"
+          body: "chore: release-${{ inputs.version }}"
+          branch: release-${{ inputs.version }}
+          base: main
+          reviewers: "abhilashlr7"
+          assignees: "abhilashlr7"
+          draft: false
+
         
       - name: Print Hello World
         run: echo "Bye World"
