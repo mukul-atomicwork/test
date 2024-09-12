@@ -12,6 +12,9 @@ permissions:
 jobs:
   hello:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - name: Print Hello World
         run: echo "Hello World"
