@@ -53,10 +53,10 @@ jobs:
           }
 
           if [[ "$build_branch" == *beta* ]]; then
-            environments='[{"environment": "staging", "region": "us-east-1", "region-suffix": "use"}]'
+            environments='[{"env": "staging", "region": "us-east-1", "region-suffix": "use"}]'
           else
             
-            environments='[{"environment": "production", "region": "us-east-1", "region-suffix": "use"}, {"environment": "production-euw", "region": "eu-west-1", "region-suffix": "euw"}]'
+            environments='[{"env": "production", "region": "us-east-1", "region-suffix": "use"}, {"env": "production-euw", "region": "eu-west-1", "region-suffix": "euw"}]'
           fi
           echo "environments=${environments}" >>$GITHUB_OUTPUT
 
@@ -71,7 +71,7 @@ jobs:
           echo "Building ${{ inputs.branch }} by @${{ github.actor }}"
           echo "Branch: ${{ inputs.branch }}"
           echo "Build Version: ${{ inputs.build_version }}-${{matrix.environment.region-suffix}}"
-          echo "Environment: ${{matrix.environment.environment}}"
+          echo "Environment: ${{matrix.environment.env}}"
           echo "Region: ${{matrix.environment.region}}"
           # set output
           echo "build_version=${{ inputs.build_version }}-${{matrix.environment.region-suffix}}" >>$GITHUB_OUTPUT
@@ -84,6 +84,6 @@ jobs:
     steps :
       - name: Log Inputs
         run: |
-          echo "Deploying ${{ inputs.build_version }}-${{matrix.environment.region-suffix}} to ${{matrix.environment.environment}} by @${{ github.actor }}"
+          echo "Deploying ${{ inputs.build_version }}-${{matrix.environment.region-suffix}} to ${{matrix.environment.env}} by @${{ github.actor }}"
           echo "Environment: ${{ inputs.environment }}"
           echo "Region: ${{ inputs.region }}"
