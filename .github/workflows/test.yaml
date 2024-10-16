@@ -59,6 +59,7 @@ jobs:
             environments='[{"env": "production", "region": "us-east-1", "region-suffix": "use"}, {"env": "production-euw", "region": "eu-west-1", "region-suffix": "euw"}]'
           fi
           echo "environments=${environments}" >>$GITHUB_OUTPUT
+          echo "$environments"
 
   build:
     strategy:
