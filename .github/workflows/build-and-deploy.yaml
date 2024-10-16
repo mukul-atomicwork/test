@@ -39,6 +39,7 @@ jobs:
                 echo "$GITHUB_CONTEXT"
     build:
         runs-on: ubuntu-latest
+        needs: build-info
         steps :
             - name: Log Inputs
               run: |
@@ -52,6 +53,7 @@ jobs:
 
     deploy:
         runs-on: ubuntu-latest
+        needs: build
         steps :
             - name: Log Inputs
               run: |
