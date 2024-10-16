@@ -1,0 +1,79 @@
+name: "Workflow Call: Build Image"
+
+on:
+  workflow_call:
+    inputs:
+        build_branch:
+            description: "Branch to build from"
+            type: string
+            required: true
+        build_version:
+            description: "Container image version (Optional)"
+            type: string
+            required: false
+        environment:
+            description: "Github environment to use"
+            type: string
+            required: true
+        region:
+            description: "AWS region to deploy to"
+            type: string
+            required: true
+        region-suffix:
+            description: "AWS region suffix"
+            type: string
+            required: true
+    outputs:
+      build_version:
+        description: "Build version"
+        value: ${{ jobs.build.outputs.build_version }}
+
+jobs:
+    build-info:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Dump GitHub context
+              env:
+                GITHUB_CONTEXT: ${{ toJson(github) }}
+              run: |
+                echo "$GITHUB_CONTEXT"
+    build:
+        runs-on: ubuntu-latest
+        steps :
+            - name: Log Inputs
+              run: |
+                echo "Building ${{ inputs.build_branch }} by @${{ github.actor }}"
+                echo "Branch: ${{ inputs.build_branch }}"
+                echo "Build Version: ${{ inputs.build_version }}-${{ inputs.region-suffix }}"
+                echo "Environment: ${{ inputs.environment }}"
+                echo "Region: ${{ inputs.region }}"
+                # set output
+                echo "build_version=${{ inputs.build_version }}-${{ inputs.region-suffix }}" >>$GITHUB_OUTPUT
+
+    deploy:
+        runs-on: ubuntu-latest
+        steps :
+            - name: Log Inputs
+              run: |
+                echo "Deploying ${{ inputs.build_version }}-${{ inputs.region-suffix }} to ${{ inputs.environment }} by @${{ github.actor }}"
+                echo "Environment: ${{ inputs.environment }}"
+                echo "Region: ${{ inputs.region }}"
+
+    # build:
+    #     uses: ./.github/workflows/release-build.yaml
+    #     needs: build-info
+    #     secrets: inherit
+    #     with:
+    #         build_branch: ${{inputs.build_branch}}
+    #         build_version: ${{inputs.build_version}}
+    #         environment: ${{ inputs.environment }}
+    # deploy:
+    #     if: github.event_name == 'release'
+    #     uses: ./.github/workflows/release-deploy.yaml
+    #     needs: build
+    #     secrets: inherit
+    #     with:
+    #       version: ${{ needs.build.outputs.build_version }}
+    #       environment: ${{ inputs.environment }}
+    #       region: ${{ inputs.region }}
+    
