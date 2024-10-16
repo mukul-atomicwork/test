@@ -72,4 +72,4 @@ jobs:
       build_version: ${{inputs.build_version}}
       environment: ${{matrix.environment.environment}}
       region: ${{matrix.environment.region}}
-      region_suffix: ${{matrix.environment.region-suffix}}
+      region-suffix: ${{matrix.environment.region-suffix}}
