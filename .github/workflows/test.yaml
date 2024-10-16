@@ -60,16 +60,30 @@ jobs:
           fi
           echo "environments=${environments}" >>$GITHUB_OUTPUT
 
-  build-and-deploy:
+  build:
     strategy:
       matrix:
         environment: ${{fromJson(needs.build-info.outputs.environments)}}
-    needs: build-info
-    uses: ./.github/workflows/build-and-deploy.yaml
-    secrets: inherit
-    with:
-      build_branch: ${{inputs.branch}}
-      build_version: ${{inputs.build_version}}
-      environment: ${{matrix.environment.environment}}
-      region: ${{matrix.environment.region}}
-      region-suffix: ${{matrix.environment.region-suffix}}
+    runs-on: ubuntu-latest
+    steps :
+      - name: Log Inputs
+        run: |
+          echo "Building ${{ inputs.branch }} by @${{ github.actor }}"
+          echo "Branch: ${{ inputs.branch }}"
+          echo "Build Version: ${{ inputs.build_version }}-${{matrix.environment.region-suffix}}"
+          echo "Environment: ${{matrix.environment.environment}}"
+          echo "Region: ${{matrix.environment.region}}"
+          # set output
+          echo "build_version=${{ inputs.build_version }}-${{matrix.environment.region-suffix}}" >>$GITHUB_OUTPUT
+
+  deploy:
+    strategy:
+      matrix:
+        environment: ${{fromJson(needs.build-info.outputs.environments)}}
+    runs-on: ubuntu-latest
+    steps :
+      - name: Log Inputs
+        run: |
+          echo "Deploying ${{ inputs.build_version }}-${{matrix.environment.region-suffix}} to ${{matrix.environment.environment}} by @${{ github.actor }}"
+          echo "Environment: ${{ inputs.environment }}"
+          echo "Region: ${{ inputs.region }}"
