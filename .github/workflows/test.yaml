@@ -73,6 +73,7 @@ jobs:
       matrix:
         environment: ${{fromJson(needs.build-info.outputs.environments)}}
     runs-on: ubuntu-latest
+    needs: [build-info]
     steps :
       - name: Log Inputs
         run: |
