@@ -61,6 +61,13 @@ jobs:
           echo "environments=${environments}" >>$GITHUB_OUTPUT
           echo "$environments"
 
+  log:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log inputs
+        run: |
+          echo ${{needs.build-info.outputs.environments}}
+
   build:
     strategy:
       matrix:
