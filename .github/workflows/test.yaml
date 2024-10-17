@@ -12,6 +12,13 @@ on:
         required: true
         default: "1.0.0"
 
+      option1:
+        type: boolean
+      option2:
+        type: boolean
+      option3:
+        type: boolean
+
 jobs:
   build-info:
     runs-on: ubuntu-latest
