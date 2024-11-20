@@ -31,56 +31,16 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
-          echo "$GITHUB_CONTEXT"
-
-      - name: Build info
-        id: build-info
-        run: |
-          build_branch="${{ github.event.inputs.branch }}"
-          build_version="${{ github.event.inputs.build_version }}"
+          mkdir test
+          cd test
+          pwd
+          touch i-will-touch-you-appropriately
+          cd ..
+          ls
+          pwd
+          ls test
           
-          echo "build_branch=${build_branch}" >>$GITHUB_OUTPUT
-          echo "build_version=${build_version}" >>$GITHUB_OUTPUT
-          echo "Build info: branch=${build_branch} version=${build_version}"
 
-          transform_region() {
-              input_string=$1
-  
-              # Split the string by '-' and store the results in an array
-              IFS='-' read -r -a parts <<< "$input_string"
-  
-              # Extract the first part as is, and the first character of the second part
-              first_part="${parts[0]}"
-              second_part_initial="${parts[1]:0:1}"
-  
-              # Concatenate the results
-              result="${first_part}${second_part_initial}"
-  
-              echo "$result"
-          }
-
-          if [[ "$build_branch" == *beta* ]]; then
-            environments='[{"env": "staging", "region": "us-east-1", "region-suffix": "use"}]'
-          else
-            
-            environments='[{"env": "production", "region": "us-east-1", "region-suffix": "use"}, {"env": "production-euw", "region": "eu-west-1", "region-suffix": "euw"}]'
-          fi
-          echo "environments=${environments}" >>$GITHUB_OUTPUT
-          echo "$environments"
-
-  build-and-deploy:
-    strategy:
-      matrix:
-        environment: ${{fromJson(needs.build-info.outputs.environments)}}
-    needs: build-info
-    uses: ./.github/workflows/build-and-deploy.yaml
-    secrets: inherit
-    with:
-      build_branch: ${{inputs.branch}}
-      build_version: ${{inputs.build_version}}
-      environment: ${{matrix.environment.environment}}
-      region: ${{matrix.environment.region}}
-      region-suffix: ${{matrix.environment.region-suffix}}
   # build:
   #   strategy:
   #     matrix:
