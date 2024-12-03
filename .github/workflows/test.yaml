@@ -39,6 +39,12 @@ jobs:
           ls
           pwd
           ls test
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          pwd
           
 
   # build:
