@@ -39,6 +39,8 @@ jobs:
           ls
           pwd
           ls test
+          mkdir blue
+          cd blue
 
       - name: Dump GitHub context
         env:
