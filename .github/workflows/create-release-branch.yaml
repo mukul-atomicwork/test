@@ -22,6 +22,13 @@ jobs:
         run: |
           # Get the tag name from the release
           TAG_NAME="${{ github.event.release.tag_name }}"
+          
+          # Only process standard semantic version tags (v1.0.0, v1.2.3, etc.)
+          if ! [[ "${TAG_NAME}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Skipping branch creation for tag: ${TAG_NAME} (not a standard semantic version)"
+            exit 0
+          fi
+          
           BRANCH_NAME="release-${TAG_NAME}"
           
           echo "Checking if branch ${BRANCH_NAME} exists..."
