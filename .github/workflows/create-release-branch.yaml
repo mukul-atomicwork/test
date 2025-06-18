@@ -17,6 +17,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create release branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Get the tag name from the release
           TAG_NAME="${{ github.event.release.tag_name }}"
