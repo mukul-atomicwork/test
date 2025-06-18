@@ -1,0 +1,37 @@
+name: "Create Release Branch"
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  create-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create release branch
+        run: |
+          # Get the tag name from the release
+          TAG_NAME="${{ github.event.release.tag_name }}"
+          BRANCH_NAME="release-${TAG_NAME}"
+          
+          echo "Checking if branch ${BRANCH_NAME} exists..."
+          
+          # Check if branch already exists
+          if git ls-remote --heads origin "${BRANCH_NAME}" | grep -q "${BRANCH_NAME}"; then
+            echo "Branch ${BRANCH_NAME} already exists. Skipping creation."
+            exit 0
+          fi
+          
+          echo "Creating branch: ${BRANCH_NAME} from tag: ${TAG_NAME}"
+          
+          # Create and push the new branch from the tag
+          git checkout -b "${BRANCH_NAME}" "${TAG_NAME}"
+          git push origin "${BRANCH_NAME}"
+          
+          echo "Successfully created branch: ${BRANCH_NAME}"
